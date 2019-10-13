@@ -1,0 +1,23 @@
+{
+  "name": "conquest-mod-bot",
+  "version": "1.0.0",
+  "description": "A moderation bot for conquest discord server",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GagePielsticker/conquest-mod-bot.git"
+  },
+  "author": "Luke-6723",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GagePielsticker/conquest-mod-bot/issues"
+  },
+  "homepage": "https://github.com/GagePielsticker/conquest-mod-bot#readme",
+  "dependencies": {
+    "discord.js": "git+https://github.com/discordjs/discord.js.git",
+    "dotenv": "^8.1.0"
+  }
+}
