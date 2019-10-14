@@ -8,21 +8,13 @@ module.exports = function (client, guildMemberObject) {
    * Dev     : 632020927391203378           2
    * All Perm Bypass: process.env.evalUsers 3
    */
-  var permOutput = {}
+  var highestPermission = Number()
 
-  // Member Check
-  if (guildMemberObject.roles.has('632493565376724992')) permOutput[0] = true
-  else permOutput[0] = false
-  // Staff Check
-  if (guildMemberObject.roles.has('597554402123055158')) permOutput[1] = true
-  else permOutput[1] = false
-  // Developer Check && Game Director Check
-  if (guildMemberObject.roles.has('632022745827508233')) permOutput[2] = true
-  else if (guildMemberObject.roles.has('632020927391203378')) permOutput[2] = true
-  else permOutput[2] = false
-  // All Perm Bypass Check
-  if (client.evalUsers.includes(guildMemberObject.id)) permOutput[3] = true
-  else permOutput[3] = false
+  if (guildMemberObject.roles.has('632493565376724992')) highestPermission = 0
+  if (guildMemberObject.roles.has('597554402123055158')) highestPermission = 1
+  if (guildMemberObject.roles.has('632022745827508233')) highestPermission = 2
+  if (guildMemberObject.roles.has('632020927391203378')) highestPermission = 2
+  if (client.evalUsers.includes(guildMemberObject.id)) highestPermission = 3
 
-  return permOutput
+  return highestPermission
 }
