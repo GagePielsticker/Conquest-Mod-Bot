@@ -10,13 +10,13 @@ module.exports = (timeInSeconds) => {
   const mins = Math.floor(timeInSeconds % 3600 / 60)
   const secs = Math.floor(timeInSeconds % 60)
 
-  const output = []
-  if (years) output.push(`${years.toString()} Year(s)`)
-  if (months) output.push(`${months.toString()} Month(s)`)
-  if (days) output.push(`${days.toString()} Day(s)`)
-  if (hrs) output.push(`${hrs.toString()} Hour(s)`)
-  if (mins) output.push(`${mins.toString()} Min(s)`)
-  if (secs) output.push(`${secs.toString()} Second(s)`)
-
+  var output = []
+  if (years > 0) output.push(`${years.toString()} Year(s)`)
+  if (months > 0) output.push(`${months.toString()} Month(s)`)
+  if (days > 0) output.push(`${days.toString()} Day(s)`)
+  if (hrs > 0) output.push(`${hrs.toString()} Hour(s)`)
+  if (mins > 0) output.push(`${mins.toString()} Min(s)`)
+  if (secs > 0) output.push(`${secs.toString()} Second(s)`)
+  console.log(output)
   return output.join(', ')
 }
