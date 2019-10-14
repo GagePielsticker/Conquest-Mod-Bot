@@ -8,7 +8,7 @@ module.exports = (timeInSeconds) => {
   const days = Math.floor((timeInSeconds / 86400000) % 7)
   const hrs = Math.floor((timeInSeconds / 3600000) % 24)
   const mins = Math.floor(timeInSeconds % 3600000 / 60000)
-  const secs = Math.floor(timeInSeconds % 60000)
+  const secs = Math.floor((timeInSeconds / 1000) % 60)
 
   var output = []
   if (years > 0) output.push(`${years.toString()} Year(s)`)
