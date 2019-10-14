@@ -1,5 +1,3 @@
-const commands = require('../commands').commands
-
 module.exports = (client, msg) => {
   if (msg.author.bot) return
   if (msg.guild.id !== '597553336044224522') return
@@ -10,12 +8,11 @@ module.exports = (client, msg) => {
   const givenCommand = splitMessage[0].substring(3).toLowerCase()
   const args = splitMessage.splice(1)
   if (givenPrefix === prefix) {
-    if (commands[givenCommand]) {
-      if (userPerms[3]) commands[givenCommand].func(client, msg, args)
-      else if (userPerms >= commands[givenCommand].permission) commands[givenCommand].func(client, msg, args)
-    } else if (commands.aliases[givenCommand]) {
-      if (userPerms[3]) commands[commands.aliases[givenCommand]].func(client, msg, args)
-      else if (userPerms >= commands[commands.aliases[givenCommand]].permission) commands[commands.aliases[givenCommand]].func(client, msg, args)
+    const command = client.commands.get(givenCommand)
+    if (command) {
+      if (userPerms >= command.permission) {
+        command.run(msg, args)
+      }
     }
   }
 }
