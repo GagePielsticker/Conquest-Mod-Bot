@@ -1,7 +1,7 @@
 module.exports = (client, member) => {
   const logChannel = member.guild.channels.get('633150754470756352')
-  const userAge = client.convertTime((Date.now() - member.user.createdAt) / 1000)
-
+  const userAge = client.convertTime((Date.now() - member.user.createdAt))
+  member.roles.add('632493565376724992').catch()
   logChannel.send(
     new client.discord.MessageEmbed()
       .setDescription(`${member.user.tag} | <@${member.id}> | (${member.id})`)
