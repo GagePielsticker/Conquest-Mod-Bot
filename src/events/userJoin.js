@@ -1,5 +1,5 @@
 module.exports = (client, member) => {
-  const logChannel = member.guild.channels.get('632494293851832320')
+  const logChannel = member.guild.channels.get('633150754470756352')
   const userAge = client.convertTime((Date.now() - member.user.createdAt) / 1000)
 
   logChannel.send(
