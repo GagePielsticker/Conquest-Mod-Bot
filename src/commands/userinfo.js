@@ -5,7 +5,7 @@ module.exports = class UserInfo extends Command {
     super(client, ['userinfo', 'ui'], 'Get information about a user', 0)
   }
 
-  run (msg, args) {
+  async run (msg, args) {
     let id
     if (args.length === 0) id = msg.author.id
     else id = args[0].replace(/[<@!>]+/g, '')
@@ -22,8 +22,8 @@ module.exports = class UserInfo extends Command {
 ${this.client.convertTime((Date.now() - user.createdAt))}
 `)
       msg.channel.send({ embed })
-    }).catch(() => {
-      msg.channel.send(new this.client.discord.MessageEmbed()
+    }).catch(async () => {
+      await msg.channel.send(new this.client.discord.MessageEmbed()
         .addField('Error', 'User Not Found.')
         .setColor(this.client.embedColor))
     })
