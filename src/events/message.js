@@ -1,4 +1,4 @@
-module.exports = (client, msg) => {
+module.exports = async (client, msg) => {
   if (msg.author.bot) return
   if (msg.guild.id !== '597553336044224522') return
   const userPerms = client.permissionCheck(client, msg.member)
@@ -11,7 +11,7 @@ module.exports = (client, msg) => {
     const command = client.commands.get(givenCommand)
     if (command) {
       if (userPerms >= command.permission) {
-        command.run(msg, args)
+        await command.run(msg, args)
       }
     }
   }
