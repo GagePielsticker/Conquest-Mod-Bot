@@ -4,6 +4,12 @@ require('dotenv').config()
 const conquest = require('./src')
 const discord = require('discord.js')
 const client = new discord.Client()
+const conquestModerationHandlers = require('./src/database/')
+
+// Load the database
+const { DATABASE_USER, DATABASE_PASS, DATABASE_IP, DATABASE_PORT } = process.env
+const couch = require('nano')(`http://${DATABASE_USER}:${DATABASE_PASS}@${DATABASE_IP}:${DATABASE_PORT}`)
+const conquestCouchDatabase = couch.use('conquest')
 
 // Store some useful variable in the client object
 client.conquest = conquest
@@ -13,6 +19,8 @@ client.discord = discord
 client.evalUsers = process.env.EVAL_USERS.split(' ')
 client.permissionCheck = conquest.permissionCheck
 client.commands = new discord.Collection()
+client.conquestModerationHandlers = conquestModerationHandlers
+client.conquestCouchDatabase = conquestCouchDatabase
 
 // Event Handlers
 client.on('message', (msg) => conquest.events.message(client, msg))
