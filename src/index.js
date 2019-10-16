@@ -3,10 +3,7 @@ module.exports = {
     ready: require('./events/ready'),
     userJoin: require('./events/userJoin'),
     message: require('./events/message'),
-    starboard: {
-      starAdded: require('./events/emoji').starAdded,
-      starRemoved: require('./events/emoji').starRemoved
-    },
+    Starboard: require('./events/emoji').Starboard,
     moderation: {
       userKicked: require('./events/moderation').userKicked,
       userBanned: require('./events/moderation').userBanned
