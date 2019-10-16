@@ -2,7 +2,6 @@
 const commands = require('../commands')
 
 module.exports = (client) => {
-  client.user.setActivity('Conquest', { type: 'WATCHING' })
   console.log('[Conquest] Initialising Commands!')
   commands.init(client).then(() => {
     client.guilds.get('597553336044224522').channels.map(channel => {

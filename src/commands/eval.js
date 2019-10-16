@@ -13,10 +13,15 @@ module.exports = class Eval extends Command {
     try {
       const content = args.join(' ')
       const silent = content.search(/^(-s)/i)
-      const code = content.replace(/^(-s)/i, '').trim()
+      const silentDelete = content.search(/^(-sd)/i)
+      let code = content
+      if (!silent) code = content.replace(/^(-s)/i, '').trim()
+      if (!silentDelete) code = content.replace(/^(-sd)/i, '').trim()
+
       let evaled = await eval(code)
       if (typeof evaled !== 'string') { evaled = require('util').inspect(evaled, false, 0) }
       const output = await this.clean(evaled)
+      if (!silentDelete) await msg.delete()
       if (silent) {
         await msg.channel.send(new this.client.discord.MessageEmbed()
           .setColor(this.client.embedColor)

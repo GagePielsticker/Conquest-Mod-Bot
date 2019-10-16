@@ -12,7 +12,7 @@ module.exports = class Ping extends Command {
         .setColor(this.client.embedColor)
         .setAuthor('New Update for Conquest', msg.guild.iconURL(), 'https://conquestsim.io')
         .setDescription(args.join(' '))
-        .setFooter('Announcement by: {msg.author.tag} | https://conquestsim.io', msg.author.avatarURL())
+        .setFooter(`Announcement by: ${msg.author.tag} | https://conquestsim.io`, msg.author.avatarURL())
       msg.guild.channels.get('597553655704453121').send('<@&633797656501682233>', embed).then(() => {
         role.setMentionable(false, `Announcement by ${msg.author.tag}`)
       })

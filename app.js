@@ -3,7 +3,18 @@ require('dotenv').config()
 // Requirements
 const conquest = require('./src')
 const discord = require('discord.js')
-const client = new discord.Client()
+const client = new discord.Client({
+  partials: ['MESSAGE'],
+  messageCacheMaxSize: 500,
+  fetchAllMembers: true,
+  presence: {
+    status: 'online',
+    activity: {
+      type: 'WATCHING',
+      name: 'Conquest'
+    }
+  }
+})
 const conquestModerationHandlers = require('./src/database/')
 
 // Load the database
@@ -56,8 +67,7 @@ client.on('guildBanAdd', (guild, user) => conquest.events.moderation.userBanned(
 // starboard events
 const Starboard = new conquest.events.Starboard(client)
 client.on('messageReactionAdd', async (msgReaction, user) => {
-  if (msgReaction.message.channel.id === '633150338534342666') return
-  if (msgReaction.message.channel.id === '633942679331405834') return
+  if (msgReaction.message.partial) await msgReaction.message.fetch()
   if (msgReaction.emoji.toString() === '⭐') {
     await Starboard.starAdded(msgReaction.message, user, msgReaction)
   } // else if (msgReaction.emoji.id === '632338109534699560') {
@@ -65,6 +75,7 @@ client.on('messageReactionAdd', async (msgReaction, user) => {
   // }
 })
 client.on('messageReactionRemove', async (msgReaction, user) => {
+  if (msgReaction.message.partial) await msgReaction.message.fetch()
   if (user.id === client.user.id) return
   if (msgReaction.emoji.toString() === '⭐') {
     await Starboard.starRemoved(msgReaction.message, user, msgReaction)
