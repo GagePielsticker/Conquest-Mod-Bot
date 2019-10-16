@@ -21,6 +21,7 @@ client.permissionCheck = conquest.permissionCheck
 client.commands = new discord.Collection()
 client.conquestModLogHandler = new conquestModerationHandlers.Modlog(client)
 client.conquestCouchDatabase = conquestCouchDatabase
+client.starboard = new conquest.events.Starboard(client)
 
 // client functions that will be used more than once [ Saving the copy paste drama ] // Feel free to clean this up with a PR
 client.getMultiplier = async (timeSpan) => {
@@ -53,8 +54,22 @@ client.on('guildMemberRemove', (member) => conquest.events.moderation.userKicked
 client.on('guildBanAdd', (guild, user) => conquest.events.moderation.userBanned(client, user))
 
 // starboard events
-client.on('messageReactionAdd', () => conquest.events.ready(client))
-client.on('messageReactionRemove', () => conquest.events.ready(client))
+const Starboard = new conquest.events.Starboard(client)
+client.on('messageReactionAdd', async (msgReaction, user) => {
+  if (msgReaction.message.channel.id === '633150338534342666') return
+  if (msgReaction.message.channel.id === '633942679331405834') return
+  if (msgReaction.emoji.toString() === '⭐') {
+    await Starboard.starAdded(msgReaction.message, user, msgReaction)
+  } // else if (msgReaction.emoji.id === '632338109534699560') {
+  // await Starboard.starBlacklisted(msgReaction.message)
+  // }
+})
+client.on('messageReactionRemove', async (msgReaction, user) => {
+  if (user.id === client.user.id) return
+  if (msgReaction.emoji.toString() === '⭐') {
+    await Starboard.starRemoved(msgReaction.message, user, msgReaction)
+  }
+})
 
 // Login
 client.login(process.env.BOT_TOKEN)
