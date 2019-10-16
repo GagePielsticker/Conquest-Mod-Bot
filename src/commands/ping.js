@@ -5,8 +5,8 @@ module.exports = class Ping extends Command {
     super(client, ['ping', 'pong'], 'Get the response time of the bot.', 0)
   }
 
-  run (msg, args) {
-    msg.channel.send({
+  async run (msg, args) {
+    await msg.channel.send({
       embed: {
         description: `PONG \`${this.client.ws.ping}\`ms`,
         color: this.client.embedColor
