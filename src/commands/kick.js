@@ -1,6 +1,6 @@
 const { Command } = require('./')
 
-module.exports = class Ping extends Command {
+module.exports = class Kick extends Command {
   constructor (client) {
     super(client, ['kick', 'k'], 'Kick a user.', 1)
   }

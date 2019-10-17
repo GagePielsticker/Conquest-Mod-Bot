@@ -1,6 +1,6 @@
 const { Command } = require('./')
 
-module.exports = class Ping extends Command {
+module.exports = class Unban extends Command {
   constructor (client) {
     super(client, ['unban', 'ub'], 'Unban a user.', 1)
   }

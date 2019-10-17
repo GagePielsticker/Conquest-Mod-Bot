@@ -1,6 +1,6 @@
 const { Command } = require('./')
 
-module.exports = class Ping extends Command {
+module.exports = class Unmute extends Command {
   constructor (client) {
     super(client, ['unmute', 'um'], 'Unmute a user.', 1)
   }

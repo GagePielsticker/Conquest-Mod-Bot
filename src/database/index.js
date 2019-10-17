@@ -25,7 +25,7 @@ exports.Modlog = class Modlog {
     const embed = new this.client.discord.MessageEmbed()
       .setColor(this.client.embedColor)
       .setTitle(`${modlogCase.action} | Case #${modlogCase.case}`)
-      .addField(`${userOrBot}`, punishedUserObj.tag, true)
+      .addField(`${userOrBot}`, `${punishedUserObj.tag} (<@${punishedUserObj.id}>)`, true)
       .addField('Moderator', moderatorUserObj.tag, true)
       .addField('Reason', modlogCase.reason, false)
       .setFooter('User has since been unmuted.')
@@ -36,21 +36,24 @@ exports.Modlog = class Modlog {
     await this.client.conquestCouchDatabase.insert(muteDB, 'mutes')
   }
 
-  async addCase (action, userID, moderatorID, reason, unmuteTime = -1) {
+  async addCase (action, userID, moderatorID, reason, unmuteTime = 'perm') {
     const modlog = await this.client.conquestCouchDatabase.get('modlog')
     const newCaseNum = modlog.currentCase + 1
     const moderatorUserObj = await this.client.users.fetch(moderatorID)
     const punishedUserObj = await this.client.users.fetch(userID)
     const userOrBot = punishedUserObj.bot ? 'Bot' : 'User'
+    reason = reason || `\`Moderator please do cm!reason ${newCaseNum} <reason>\``
     const embed = new this.client.discord.MessageEmbed()
       .setColor(this.client.embedColor)
       .setTitle(`${action} | Case #${newCaseNum}`)
-      .addField(`${userOrBot}`, punishedUserObj.tag, true)
+      .addField(`${userOrBot}`, `${punishedUserObj.tag} (<@${punishedUserObj.id}>)`, true)
       .addField('Moderator', moderatorUserObj.tag, true)
       .addField('Reason', reason, false)
       .setTimestamp()
-    if (action === 'Mute' && unmuteTime > -1) {
-      embed.setFooter(`Unmute at ${new Date((Date.now() + unmuteTime)).toUTCString()} UTC`)
+    if (action === 'Mute') {
+      const theMath = (Date.now() + (unmuteTime * 1000))
+      const unmuteTimeDate = new Date(theMath)
+      embed.setFooter(`Unmute at: ${unmuteTimeDate.toUTCString().substr(0, 22)} UTC`)
     }
     const modlogMessage = await this.client.channels.get(this.modlogChannel).send(embed)
     modlog.currentCase = newCaseNum
@@ -64,7 +67,9 @@ exports.Modlog = class Modlog {
       timeOfCase: Date.now()
     }
     if (action === 'Mute') {
-      this.addMute(userID, newCaseNum, modlogMessage.id, unmuteTime)
+      const theMath = (Date.now() + (unmuteTime * 1000))
+      const timeOfUnmute = new Date(theMath).getTime()
+      await this.addMute(userID, newCaseNum, modlogMessage.id, timeOfUnmute)
     }
     await this.client.conquestCouchDatabase.insert(modlog, 'modlog')
   }
@@ -79,12 +84,16 @@ exports.Modlog = class Modlog {
     const embed = new this.client.discord.MessageEmbed()
       .setColor(this.client.embedColor)
       .setTitle(`${modlogCase.action} | Case #${modlogCase.case}`)
-      .addField(`${userOrBot}`, punishedUserObj.tag, true)
+      .addField(`${userOrBot}`, `${punishedUserObj.tag} (<@${punishedUserObj.id}>)`, true)
       .addField('Moderator', moderatorUserObj.tag, true)
       .addField('Reason', newReason, false)
       .setTimestamp(modlogCase.timeOfCase)
-    if (modlogCase.action === 'Mute' && newUnmuteTime > -1) {
-      embed.setFooter(`Unmute at ${new Date((Date.now() + newUnmuteTime)).toUTCString()} UTC`)
+    if (modlogCase.action === 'Mute' && newUnmuteTime !== 'perm') {
+      const theMath = (Date.now() + (newUnmuteTime * 1000))
+      const unmuteTimeDate = new Date(theMath)
+      embed.setFooter(`Unmute at: ${unmuteTimeDate.toUTCString().substr(0, 22)} UTC`)
+      const timeOfUnmute = new Date(theMath).getTime()
+      this.addMute(modlogCase.userID, caseNumber, modlogCase.messageID, timeOfUnmute)
     }
     const message = await this.client.channels.get(this.modlogChannel).messages.fetch(modlogCase.messageID)
     await message.edit({ embed })

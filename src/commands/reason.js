@@ -1,6 +1,6 @@
 const { Command } = require('./')
 
-module.exports = class Ping extends Command {
+module.exports = class Reason extends Command {
   constructor (client) {
     super(client, ['r', 'reason'], 'Set a modlog reason.', 1)
   }
@@ -11,8 +11,8 @@ module.exports = class Ping extends Command {
     const newReason = args.splice(1).join(' ')
     let muteTimer = -1
     if (messageSplit.length === 2) {
-      if (!messageSplit[1] !== '') return
-      muteTimer = await this.client.checkTime(messageSplit[1])
+      if (messageSplit[1] === '') return
+      muteTimer = await this.client.checkTime(messageSplit[1].trim())
     }
     await msg.delete()
     const result = await this.client.conquestModLogHandler.editCase(caseNumber, msg.author.id, newReason, muteTimer)

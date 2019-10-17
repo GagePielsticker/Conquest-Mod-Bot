@@ -1,6 +1,6 @@
 const { Command } = require('./')
 
-module.exports = class Ping extends Command {
+module.exports = class Updates extends Command {
   constructor (client) {
     super(client, 'updates', 'Toggle updates role for Conquest.', 0)
   }

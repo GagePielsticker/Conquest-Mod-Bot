@@ -18,7 +18,7 @@ class Starboard {
   async starToDB (msg, starboardMsgID, stars) {
     const starboardDB = await this.client.conquestCouchDatabase.get('starboard')
     const star = starboardDB.stars.find(star => star.original === msg.id)
-    await starboardDB.stars.splice(starboardDB.stars.indexOf(star))
+    await starboardDB.stars.splice(starboardDB.stars.indexOf(star), 1)
     starboardDB.stars.push({
       original: msg.id,
       starboardMsg: starboardMsgID,
@@ -26,7 +26,7 @@ class Starboard {
       msgAuthorID: msg.author.id,
       stars: stars
     })
-    this.couch.insert(starboardDB, 'starboard')
+    await this.couch.insert(starboardDB, 'starboard')
   }
 
   async deleteStar (msgId) {
@@ -35,13 +35,13 @@ class Starboard {
     if (!star) return
     await this.client.guilds.get('597553336044224522')
       .channels.get(this.starboardChannel).messages.get(star.starboardMsg).delete()
-    await starboardDB.stars.splice(starboardDB.stars.indexOf(star))
+    await starboardDB.stars.splice(starboardDB.stars.indexOf(star), 1)
     await this.couch.insert(starboardDB, 'starboard')
   }
 
   async editStar (msgId, user) {
     const starboardDB = await this.client.conquestCouchDatabase.get('starboard')
-    const star = starboardDB.stars.find(star => star.original === msgId || star.starboardMsg === msgId)
+    const star = starboardDB.stars.find(star => star.original === msgId) || starboardDB.stars.find(star => star.starboardMsg === msgId)
     const original = await this.client.guilds.get('597553336044224522')
       .channels.get(star.channelId).messages.fetch(star.original, true)
     const starboardMessage = await this.client.guilds.get('597553336044224522')
@@ -70,21 +70,34 @@ class Starboard {
           .setTitle('Message Starred!')
           .setAuthor(msg.author.tag, msg.author.avatarURL(), 'https://conquestsim.io')
 
-        if (msg.content.length !== 0) {
-          embed.addField('Content:', content)
-        }
-        embed.addField('Message Jump:', `[Click me!](${msg.url})`)
-        embed.setFooter('⭐ Starboard ⭐| By Luke#6723')
-        if (msg.embeds.length > 0) {
-          if (msg.embeds[0].embeds) {
-            if (embed.setImage(msg.embeds[0].thumbnail)) {
-              embed.setImage(msg.embeds[0].thumbnail.url)
+        if (msg.channel.id === '633150706668273674') {
+          if (msg.embeds.length > 0) {
+            const modlog = `
+>>> **${msg.embeds[0].title}**
+**User**                  
+${msg.embeds[0].fields[0].value}                       
+**Moderator**
+${msg.embeds[0].fields[1].value}
+**Reason**
+${msg.embeds[0].fields[2].value}
+`
+            embed.addField('Content:', modlog)
+          }
+        } else {
+          if (msg.attachments.size > 0) {
+            embed.setImage(msg.attachments.first().url)
+          }
+          if (msg.embeds.length > 0) {
+            if (msg.embeds[0].embeds) {
+              if (msg.embeds[0].thumbnail) {
+                embed.setImage(msg.embeds[0].thumbnail)
+              }
+              embed.addField('Content:', content)
             }
           }
         }
-        if (msg.attachments) {
-          embed.setImage(msg.attachments.first().url)
-        }
+        embed.addField('Message Jump:', `[Click me!](${msg.url})`)
+        embed.setFooter('⭐ Starboard ⭐| By Luke#6723')
         const starboardMessage = await this.client.guilds.get('597553336044224522').channels.get(this.starboardChannel).send(`⭐ ${msg.reactions.get('⭐').count} | <#${msg.channel.id}>`, embed)
         await starboardMessage.react('⭐')
         if (msg.channel.id !== this.starboardChannel) {
@@ -120,9 +133,9 @@ class Starboard {
         if (reactions) {
           const users = await reactions.users.fetch()
           if (users.size >= this.starLimit) {
-            this.editStar(msg.id, user)
+            await this.editStar(msg.id, user)
           } else if (users.size < this.starLimit) {
-            this.deleteStar(msg.id, user)
+            await this.deleteStar(msg.id, user)
           }
         }
       }
