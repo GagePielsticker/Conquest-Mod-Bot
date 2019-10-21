@@ -15,6 +15,7 @@ const client = new discord.Client({
     }
   }
 })
+
 const conquestModerationHandlers = require('./src/database/')
 
 // Load the database
@@ -74,7 +75,7 @@ setInterval(async () => {
 // Event Handlers
 client.on('message', (msg) => conquest.events.message(client, msg))
 client.on('ready', () => conquest.events.ready(client))
-client.on('guildMemberAdd', (member) => conquest.events.userJoin(client, member))
+client.on('guildMemberAdd', async (member) => conquest.events.userJoin(client, member))
 client.on('guildMemberRemove', (member) => {
   const time = new Date().getTime()
   conquest.events.moderation.userLeaveorKicked(client, member, member.guild, time)
@@ -90,24 +91,15 @@ const Starboard = new conquest.events.Starboard(client)
 client.on('messageReactionAdd', async (msgReaction, user) => {
   if (msgReaction.message.partial) await msgReaction.message.fetch()
   if (msgReaction.emoji.toString() === '⭐') {
-    await Starboard.starAdded(msgReaction.message, user, msgReaction)
+    await Starboard.starUpdated(msgReaction.message, user, msgReaction)
   }
 })
 client.on('messageReactionRemove', async (msgReaction, user) => {
   if (msgReaction.message.partial) await msgReaction.message.fetch()
   if (user.id === client.user.id) return
   if (msgReaction.emoji.toString() === '⭐') {
-    await Starboard.starRemoved(msgReaction.message, user, msgReaction)
+    await Starboard.starUpdated(msgReaction.message, user, msgReaction)
   }
 })
 
-// Login
 client.login(process.env.BOT_TOKEN)
-
-// express rest api for commands page
-// const app = require('express')()
-// app.use('/', (req, res) => {
-//   const commands = require('./').commands
-//   res.json(commands)
-// })
-// app.listen(8877)
