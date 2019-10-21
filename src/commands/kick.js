@@ -7,7 +7,7 @@ module.exports = class Kick extends Command {
 
   async run (msg, args) {
     if (args.length === 0) return msg.channel.send(new this.client.discord.MessageEmbed().setColor(this.client.embedColor).setDescription('Give a user to kick.'))
-    const userId = args[0].replace(/[<@!>]+/, '')
+    const userId = args[0].replace(/[<@!>]+/g, '')
     const reason = args.splice(1).join(' ')
     const member = await msg.guild.members.get(userId)
     if (!member) return msg.channel.send(new this.client.discord.MessageEmbed().setColor(this.client.embedColor).setDescription('User not found.'))

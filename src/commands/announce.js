@@ -2,7 +2,7 @@ const { Command } = require('./')
 
 module.exports = class Announce extends Command {
   constructor (client) {
-    super(client, ['announce', 'annoucement'], 'Make an announcement.', 3)
+    super(client, ['announce', 'announcement'], 'Make an announcement.', 3)
   }
 
   async run (msg, args) {

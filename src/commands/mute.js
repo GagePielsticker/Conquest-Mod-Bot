@@ -12,8 +12,7 @@ module.exports = class Mute extends Command {
     const reason = args.splice(1).join(' ')
     let muteTimer = 'perm'
     if (messageSplit.length === 2) {
-      if (messageSplit[1] === '') return
-      muteTimer = await this.client.checkTime(messageSplit[1].trim())
+      if (messageSplit[1] !== '') muteTimer = await this.client.checkTime(messageSplit[1].trim())
     }
     const member = await msg.guild.members.get(userId)
     if (!member) return msg.channel.send(new this.client.discord.MessageEmbed().setColor(this.client.embedColor).setDescription('User not found.'))
