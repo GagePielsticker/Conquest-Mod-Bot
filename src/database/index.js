@@ -89,8 +89,9 @@ exports.Modlog = class Modlog {
     const moderatorUserObj = await this.client.users.fetch(moderatorID)
     const punishedUserObj = await this.client.users.fetch(modlogCase.userID)
     const userOrBot = punishedUserObj.bot ? 'Bot' : 'User'
+    const message = await this.client.channels.get(this.modlogChannel).messages.fetch(modlogCase.messageID)
     const embed = new this.client.discord.MessageEmbed()
-      .setColor(this.client.embedColor)
+      .setColor(message.embeds[0].color)
       .setTitle(`${modlogCase.action} | Case #${modlogCase.case}`)
       .addField(`${userOrBot}`, `${punishedUserObj.tag} (<@${punishedUserObj.id}>)`, true)
       .addField('Moderator', moderatorUserObj.tag, true)
@@ -103,7 +104,6 @@ exports.Modlog = class Modlog {
       const timeOfUnmute = new Date(theMath).getTime()
       this.addMute(modlogCase.userID, caseNumber, modlogCase.messageID, timeOfUnmute)
     }
-    const message = await this.client.channels.get(this.modlogChannel).messages.fetch(modlogCase.messageID)
     await message.edit({ embed })
     modlogCase.reason = newReason
     modlogCase.moderatorID = moderatorID
