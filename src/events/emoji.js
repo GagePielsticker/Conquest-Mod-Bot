@@ -60,28 +60,23 @@ class Starboard {
         .setAuthor(msg.author.tag, msg.author.avatarURL())
         .setFooter('ID: ' + msg.id)
         .setTimestamp()
+      if (msg.content !== '') {
+        content += msg.content + '\n'
+      }
       if (msg.attachments.size > 1) {
         embed.setImage(msg.attachments.first().url)
       }
       if (msg.embeds.length > 0) {
         if (msg.embeds[0].thumbnail) {
+          embed.setDescription(msg.content)
           embed.setImage(msg.embeds[0].thumbnail.url)
         }
         if (msg.embeds[0].fields.length > 0) {
           content += '>>> '
           msg.embeds[0].fields.map(f => { content += `**${f.name}**\n**${f.value}**\n` })
-          embed.addField(content)
         } else embed.setDescription(content)
-        if (msg.content !== '' && content !== '') {
-          content += msg.content + '\n'
-          embed.setDescription(content)
-        }
-      } else {
-        if (msg.content !== '') {
-          content += msg.content + '\n'
-          embed.setDescription(content)
-        }
       }
+      embed.setDescription(content)
       const _m = await channel.send(`${this.star} **${stars}** | ${msg.channel}`, embed)
       await _m.react(this.star)
       return _m
@@ -117,6 +112,9 @@ class Starboard {
         const starCount = await this.getStarCount(userReactions, starboardReactions)
         if (userReactions && userReactions.size >= this.starLimit) {
           await this.updateStarMessage('EDIT', originMessage, starCount, starboardMsg.id)
+        } else {
+          await this.updateStarMessage('DELETE', msg, 0, star.starboardMsg)
+          await this.deleteStarFromDb(msg.id)
         }
       } else {
         await this.updateStarMessage('DELETE', msg, 0, star.starboardMsg)
