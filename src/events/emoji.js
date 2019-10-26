@@ -63,7 +63,7 @@ class Starboard {
       if (msg.content !== '') {
         content += msg.content + '\n'
       }
-      if (msg.attachments.size > 1) {
+      if (msg.attachments.size >= 1) {
         embed.setImage(msg.attachments.first().url)
       }
       if (msg.embeds.length > 0) {
