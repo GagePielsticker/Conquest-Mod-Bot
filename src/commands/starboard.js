@@ -2,7 +2,7 @@ const { Command } = require('./')
 
 module.exports = class StarboardLeaderboard extends Command {
   constructor (client) {
-    super(client, ['topstar', 'tpostarboard', 'topstars'], 'List the top 10 stars.', 1)
+    super(client, ['topstar', 'tpostarboard', 'topstars'], 'List the top 10 stars.', 0)
   }
 
   async run (msg, args) {
