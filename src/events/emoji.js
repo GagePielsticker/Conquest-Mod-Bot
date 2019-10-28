@@ -89,6 +89,7 @@ class Starboard {
     const stars = await this.getStars(starboard.stars)
     const star = stars.find(s => s.original === msg.id || s.starboardMsg === msg.id)
     if (!star) {
+      if (msg.author.id === '632770883718610946') return
       if (!msg.channel.id !== this.starboardChannel) {
         if (msg.reactions.resolve(this.star)) {
           const userReactions = await msg.reactions.resolve(this.star).users.fetch()
@@ -112,6 +113,7 @@ class Starboard {
         const starCount = await this.getStarCount(userReactions, starboardReactions)
         if (userReactions && userReactions.size >= this.starLimit) {
           await this.updateStarMessage('EDIT', originMessage, starCount, starboardMsg.id)
+          await this.starToDB(originMessage, starboardMsg.id, starCount)
         } else {
           await this.updateStarMessage('DELETE', msg, 0, star.starboardMsg)
           await this.deleteStarFromDb(msg.id)
