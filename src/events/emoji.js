@@ -89,6 +89,12 @@ class Starboard {
     const stars = await this.getStars(starboard.stars)
     const star = stars.find(s => s.original === msg.id || s.starboardMsg === msg.id)
     if (!star) {
+      if (user.id === msg.author.id) {
+        const msgReact = await msg.reactions.resolve(this.star)
+        if (msgReact) {
+          return msgReact.users.remove(msg.author.id)
+        }
+      }
       if (msg.author.id === '632770883718610946') return
       if (!msg.channel.id !== this.starboardChannel) {
         if (msg.reactions.resolve(this.star)) {
@@ -104,9 +110,21 @@ class Starboard {
         const originMessage = await this.client.guilds.get('597553336044224522').channels.get(star.channelId).messages.fetch(star.original)
         const channel = await this.client.guilds.get('597553336044224522').channels.get(this.starboardChannel)
         const starboardMsg = await channel.messages.fetch(star.starboardMsg)
-        if (!starboardMsg) {
+        if (!starboardMsg || !originMessage) {
           await this.updateStarMessage('DELETE', msg, 0, star.starboardMsg)
           await this.deleteStarFromDb(msg.id)
+        }
+        if (originMessage && starboardMsg) {
+          if (user.id === originMessage.author.id) {
+            const msgReact = await originMessage.reactions.resolve(this.star)
+            const msgSbReact = await starboardMsg.reactions.resolve(this.star)
+            if (msgSbReact) {
+              msgSbReact.users.remove(user.id)
+            }
+            if (msgReact) {
+              msgReact.users.remove(user.id)
+            }
+          }
         }
         const userReactions = await originMessage.reactions.resolve(this.star).users.fetch()
         const starboardReactions = await starboardMsg.reactions.resolve(this.star).users.fetch()
