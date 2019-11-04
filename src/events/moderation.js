@@ -33,7 +33,7 @@ exports.userLeaveorKicked = async (client, user, guild, time) => {
 
 exports.messageDelete = async (client, msg) => {
   if (msg.author.bot) return
-  if (msg.channel === '635674366381785117') return
+  if (msg.channel.id === '635674366381785117') return
   const embed = new client.discord.MessageEmbed().setColor(client.embedColor).setTitle('Message Deleted').setAuthor(msg.author.tag, msg.author.avatarURL())
   const logChannel = msg.guild.channels.get('640690486671310888')
   embed.setDescription(`Channel: ${msg.channel}`)
@@ -46,7 +46,7 @@ exports.messageDelete = async (client, msg) => {
 
 exports.messageEdit = (client, oldMsg, newMsg) => {
   if (newMsg.author.bot) return
-  if (oldMsg.channel === '635674366381785117') return
+  if (oldMsg.channel.id === '635674366381785117') return
   if (oldMsg.content === newMsg.content) return
   const embed = new client.discord.MessageEmbed().setColor(client.embedColor).setTitle('Message Edited').setAuthor(newMsg.author.tag, newMsg.author.avatarURL())
   const logChannel = newMsg.guild.channels.get('640690486671310888')
