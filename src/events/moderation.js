@@ -44,6 +44,7 @@ exports.messageDelete = async (client, msg) => {
 
 exports.messageEdit = (client, oldMsg, newMsg) => {
   if (newMsg.author.bot) return
+  if (oldMsg.content === newMsg.content) return
   const embed = new client.discord.MessageEmbed().setColor(client.embedColor).setTitle('Message Edited').setAuthor(newMsg.author.tag, newMsg.author.avatarURL())
   const logChannel = newMsg.guild.channels.get('640690486671310888')
   embed.addField('[Before] Content:', `${oldMsg.content === '' ? 'None' : oldMsg.content}`)
