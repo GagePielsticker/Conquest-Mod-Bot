@@ -23,10 +23,30 @@ exports.userLeaveorKicked = async (client, user, guild, time) => {
     if (theMath <= 0) { await client.conquestModLogHandler.addCase('Kick', user.id, firstEntry.executor.id, firstEntry.reason) }
   } else {
     const userAge = client.convertTime((Date.now() - user.user.createdAt))
-    await guild.channels.get('633150754470756352').send(new client.discord.MessageEmbed()
+    await guild.channels.get('640690486671310888').send(new client.discord.MessageEmbed()
       .setDescription(`${user.user.tag} | <@${user.id}> | (${user.id})`)
       .setAuthor('User Left', user.user.avatarURL(), 'https://conquestsim.io/')
       .addField('Account Age:', userAge)
       .setColor(client.embedColor))
   }
+}
+
+exports.messageDelete = async (client, msg) => {
+  if (msg.author.bot) return
+  const embed = new client.discord.MessageEmbed().setColor(client.embedColor).setTitle('Message Deleted').setAuthor(msg.author.tag, msg.author.avatarURL())
+  const logChannel = msg.guild.channels.get('640690486671310888')
+  embed.addField('Content:', `${msg.content === '' ? 'None' : msg.content}`)
+  if (msg.attachments.size > 0) {
+    embed.setImage(msg.attachments.first().proxyURL)
+  }
+  logChannel.send(embed)
+}
+
+exports.messageEdit = (client, oldMsg, newMsg) => {
+  if (newMsg.author.bot) return
+  const embed = new client.discord.MessageEmbed().setColor(client.embedColor).setTitle('Message Editted').setAuthor(newMsg.author.tag, newMsg.author.avatarURL())
+  const logChannel = newMsg.guild.channels.get('640690486671310888')
+  embed.addField('[Before] Content:', `${oldMsg.content === '' ? 'None' : oldMsg.content}`)
+  embed.addField('[After] Content:', `${newMsg.content === '' ? 'None' : newMsg.content}`)
+  logChannel.send(embed)
 }

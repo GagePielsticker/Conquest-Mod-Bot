@@ -1,5 +1,5 @@
 module.exports = async (client, member) => {
-  const logChannel = member.guild.channels.get('633150754470756352')
+  const logChannel = member.guild.channels.get('640690486671310888')
   const userAge = client.convertTime((Date.now() - member.user.createdAt))
   member.roles.add(['632493565376724992', '633797656501682233']).catch()
   const mutes = await client.conquestCouchDatabase.get('mutes')

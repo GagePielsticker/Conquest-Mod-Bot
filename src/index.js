@@ -6,7 +6,9 @@ module.exports = {
     Starboard: require('./events/emoji').Starboard,
     moderation: {
       userLeaveorKicked: require('./events/moderation').userLeaveorKicked,
-      userBanned: require('./events/moderation').userBanned
+      userBanned: require('./events/moderation').userBanned,
+      messageEdit: require('./events/moderation').messageEdit,
+      messageDelete: require('./events/moderation').messageDelete
     }
   },
   permissionCheck: require('./functions/permissionCheck'),

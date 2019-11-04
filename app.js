@@ -86,6 +86,9 @@ client.on('guildBanAdd', (guild, user) => {
   conquest.events.moderation.userBanned(client, user, guild, time)
 })
 
+client.on('messageDelete', (msg) => conquest.events.moderation.messageDelete(client, msg))
+client.on('messageUpdate', (oldMessage, newMessage) => conquest.events.moderation.messageEdit(client, oldMessage, newMessage))
+
 // starboard events
 const Starboard = new conquest.events.Starboard(client)
 client.on('messageReactionAdd', async (msgReaction, user) => {
