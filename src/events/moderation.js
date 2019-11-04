@@ -35,6 +35,7 @@ exports.messageDelete = async (client, msg) => {
   if (msg.author.bot) return
   const embed = new client.discord.MessageEmbed().setColor(client.embedColor).setTitle('Message Deleted').setAuthor(msg.author.tag, msg.author.avatarURL())
   const logChannel = msg.guild.channels.get('640690486671310888')
+  embed.setDescriptiion(`Channel: ${msg.channel}`)
   embed.addField('Content:', `${msg.content === '' ? 'None' : msg.content}`)
   if (msg.attachments.size > 0) {
     embed.setImage(msg.attachments.first().proxyURL)
@@ -47,6 +48,7 @@ exports.messageEdit = (client, oldMsg, newMsg) => {
   if (oldMsg.content === newMsg.content) return
   const embed = new client.discord.MessageEmbed().setColor(client.embedColor).setTitle('Message Edited').setAuthor(newMsg.author.tag, newMsg.author.avatarURL())
   const logChannel = newMsg.guild.channels.get('640690486671310888')
+  embed.setDescriptiion(`Channel: ${oldMsg.channel}`)
   embed.addField('[Before] Content:', `${oldMsg.content === '' ? 'None' : oldMsg.content}`)
   embed.addField('[After] Content:', `${newMsg.content === '' ? 'None' : newMsg.content}`)
   logChannel.send(embed)
