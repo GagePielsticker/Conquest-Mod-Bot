@@ -2,7 +2,7 @@ class Starboard {
   constructor (client) {
     this.client = client
     this.starLimit = 3
-    this.starboardChannel = '633150338534342666'
+    this.starboardChannel = process.env.STARBOARD_CHANNEL_ID
     this.star = '⭐'
     this.couch = client.conquestCouchDatabase
   }

@@ -12,7 +12,7 @@ module.exports = class CaseSearch extends Command {
     await Object.keys(modlog.cases).map(_case => cases.push(modlog.cases[_case]))
     const search = await cases.find(m => m.case === Number.parseInt(caseNum))
     if (!search) return msg.channel.send(new this.client.discord.MessageEmbed().setColor(this.client.embedColor).setDescription('No case'))
-    const modlogMsg = await msg.guild.channels.get('633150706668273674').messages.fetch(search.messageID)
+    const modlogMsg = await msg.guild.channels.get(process.env.MODLOG_CHANNEL_ID).messages.fetch(search.messageID)
     await msg.channel.send('**Case Found:**', modlogMsg.embeds[0])
   }
 }

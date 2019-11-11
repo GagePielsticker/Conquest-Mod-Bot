@@ -1,7 +1,7 @@
 exports.Modlog = class Modlog {
   constructor (client) {
     this.client = client
-    this.modlogChannel = '633150706668273674'
+    this.modlogChannel = process.env.MODLOG_CHANNEL_ID
   }
 
   async addMute (userID, caseNum, modlogMessageID, unmuteTime) {
